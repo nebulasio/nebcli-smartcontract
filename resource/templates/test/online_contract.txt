@@ -1,0 +1,27 @@
+/** Automatically generated code, please do not modify. */
+const fs = require('fs')
+const path = require('path')
+const OnlineBase = require('../../lib/test_online_base.js')
+const NebUtil = require('../../lib/neb_util.js').testnet
+
+
+class Online extends OnlineBase {
+
+    get __contractName() {
+        return '@contract'
+    }
+
+    get _source() {
+        let p = path.join(__dirname, '../../build/output/@contract.js')
+        if (!fs.existsSync(p)) {
+            throw p + ' not found.'
+        }
+        return String(fs.readFileSync(p))
+    }
+
+@deploy
+@functions
+}
+
+
+module.exports = new Online()

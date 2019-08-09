@@ -1,0 +1,4 @@
+
+    @function(@args) {
+        return this.call(@contract, '@function', this.value, @args_array)
+    }

@@ -1,0 +1,21 @@
+{
+  "name": "nebdev",
+  "version": "1.0.0",
+  "description": "Nebulas contract development nodejs tool",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ping",
+  "license": "ISC",
+  "bin": {
+    "nebdev": "./cmd/index.js"
+  },
+  "dependencies": {
+    "commander": "^2.20.0",
+    "espree": "^6.0.0",
+    "fs-extra": "^8.1.0",
+    "linq": "^3.2.0",
+    "nebulas": "^0.4.8"
+  }
+}

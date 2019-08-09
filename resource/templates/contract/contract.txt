@@ -1,0 +1,26 @@
+/** Local simulation environment code; Do not modify */
+const neblocal = require('../../lib/neblocal')
+const crypto = require('../../lib/crypto')
+const BigNumber = require('bignumber.js')
+const Blockchain = neblocal.Blockchain
+const LocalContractStorage = neblocal.LocalContractStorage
+const Event = neblocal.Event
+/** Local simulation environment code; End. */
+
+
+function @contract() {
+    // You need to ensure that each contract has a different __contractName
+    this.__contractName = "@contract";
+}
+
+@contract.prototype = {
+
+    init: function () {
+    },
+
+    accept: function() {
+    },
+
+}
+
+module.exports = @contract

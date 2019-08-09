@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "LocalMain",
+            "program": "${workspaceFolder}/test/local_main.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "OnlineMain",
+            "program": "${workspaceFolder}/test/online_main.js"
+        }
+    ]
+}

@@ -1,0 +1,18 @@
+/** Automatically generated code, please do not modify. */
+const LocalContext = require('../../lib/neblocal.js').LocalContext
+const LocalBase = require('../../lib/test_local_base.js')
+const @contract = require('../../src/@contract/main')
+
+
+class Test extends LocalBase {
+
+    get __contractClass() {
+        return @contract
+    }
+
+@deploy
+@functions
+}
+
+
+module.exports = new Test()

@@ -1,0 +1,18 @@
+/** Automatically generated code, please do not modify. */
+/** Automatically generated code; End. */
+
+const Linq = require('Linq')
+const TestKeys = require('../lib/test_keys.js')
+const LocalContext = require('../lib/neblocal.js').LocalContext
+const ConfigRunner = require('../lib/config_runner.js')
+
+// 清空模拟环境数据
+LocalContext.clearData()
+
+// 默认发布者
+let defaultDeployer = TestKeys.deployer.getAddressString()
+// 默认调用者
+let defaultCaller = TestKeys.caller.getAddressString()
+// 其他地址 (共10个)
+let otherKeys = Linq.from(TestKeys.otherKeys).select(k => k.getAddressString()).toArray()
+

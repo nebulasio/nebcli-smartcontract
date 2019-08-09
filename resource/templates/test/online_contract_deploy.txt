@@ -1,0 +1,3 @@
+    async deploy(@args) {
+        return await NebUtil.oneKeyDeploy(this.account, this._source, @args_array)
+    }
