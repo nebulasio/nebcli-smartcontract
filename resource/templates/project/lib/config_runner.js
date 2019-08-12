@@ -27,6 +27,22 @@ class ConfigRunner {
         }
     }
 
+    async deploy() {
+        if (this._isLocal) {
+            await this._localDeploy()
+        } else {
+            await this._onlineDeploy()
+        }
+    }
+
+    async runMethods() {
+        if (this._isLocal) {
+            await this._localRunMethods()
+        } else {
+            await this._onlineRunMethods()
+        }
+    }
+
     get _deployConfig() {
         return ConfigManager.deployConfig(this.contract, this._isMainnet, this._isLocal)
     }
@@ -35,23 +51,7 @@ class ConfigRunner {
         return ConfigManager.methodsConfig(this.contract, this._isMainnet, this._isLocal)
     }
 
-    async deploy() {
-        if (this._isLocal) {
-            await this.localDeploy()
-        } else {
-            await this.onlineDeploy()
-        }
-    }
-
-    async runMethods() {
-        if (this._isLocal) {
-            await this.localRunMethods()
-        } else {
-            await this.onlineRunMethods()
-        }
-    }
-
-    async localDeploy() {
+    async _localDeploy() {
         this._printLine()
         this._logger.d(this.contract, 'deploy begin.')
         let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
@@ -60,7 +60,7 @@ class ConfigRunner {
         this._logger.d(this.contract, 'deploy result:', JSON.stringify(r))
     }
 
-    async localRunMethods() {
+    async _localRunMethods() {
         let ms = this._methodsConfig.testMethods
         if (!ms) {
             ms = this._methodsConfig.allMethods
@@ -78,11 +78,12 @@ class ConfigRunner {
         }
     }
 
-    async onlineDeploy() {
+    async _onlineDeploy() {
         this._printLine()
         this._logger.d(this.contract, 'deploy begin...')
         let account = await this._deployer()
-        let c = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let t = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let c = this._isMainnet ? t.mainnet : t.testnet
         let r = await c.setAccount(account).deploy()
         if (!r) {
             this._logger.d('deploy failed.')
@@ -98,7 +99,7 @@ class ConfigRunner {
         }
     }
 
-    async onlineRunMethods() {
+    async _onlineRunMethods() {
         let ms = this._methodsConfig.testMethods
         if (!ms || ms.length === 0) {
             this._logger.d('testMethods is empty.')
