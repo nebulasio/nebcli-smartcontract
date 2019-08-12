@@ -2,10 +2,15 @@
 const fs = require('fs')
 const path = require('path')
 const OnlineBase = require('../../lib/test_online_base.js')
-const NebUtil = require('../../lib/neb_util.js').testnet
+const NebUtil = require('../../lib/neb_util.js')
 
 
 class Online extends OnlineBase {
+
+    constructor(isMainnet) {
+        super(isMainnet)
+        this.nebUtil = isMainnet ? NebUtil.mainnet : NebUtil.testnet
+    }
 
     get __contractName() {
         return '@contract'
@@ -24,4 +29,8 @@ class Online extends OnlineBase {
 }
 
 
-module.exports = new Online()
+Online.mainnet = new Online(true)
+Online.testnet = new Online(false)
+
+
+module.exports = Online

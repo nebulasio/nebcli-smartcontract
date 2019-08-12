@@ -1,3 +1,3 @@
     deploy(@args) {
-        return LocalContext._deploy(this.caller, @contract, @args_array)
+        return LocalContext._deploy(this.account, @contract, @args_array)
     }

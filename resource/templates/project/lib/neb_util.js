@@ -58,8 +58,8 @@ class NebUtil {
                 .catch(e => {
                     console.trace(e)
                     resolve(null)
-                });
-        });
+                })
+        })
     }
 
     async genDeploySignData(from, source, args) {
@@ -131,9 +131,9 @@ class NebUtil {
                 data.to,
                 data.value,
                 data.nonce, data.gasPrice, data.gasLimit, data.contract
-            );
-            tx.signTransaction();
-            return tx.toProtoString();
+            )
+            tx.signTransaction()
+            return tx.toProtoString()
         } catch (e) {
             this.Logger.e(e)
             return null
@@ -148,7 +148,7 @@ class NebUtil {
             }).catch(e => {
                 self._logger.e(e)
                 resolve(null)
-            });
+            })
         })
     }
 
@@ -184,7 +184,7 @@ class NebUtil {
             }).catch(function (err) {
                 self._logger.e(err)
                 resolve(null)
-            });
+            })
         })
     }
 
@@ -222,7 +222,7 @@ class NebUtil {
             }).catch(e => {
                 self._logger.e(e)
                 resolve(null)
-            });
+            })
         })
     }
 }

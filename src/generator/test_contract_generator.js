@@ -49,7 +49,7 @@ class Local {
             } else if (m.name !== 'accept') {
                 functions += this._genFunction(contractInfo, m)
             }
-        });
+        })
         return r.replace(/@functions/g, functions)
     }
 
@@ -99,7 +99,7 @@ class Online {
             } else if (m.name !== 'accept') {
                 functions += this._genFunction(contractInfo, m)
             }
-        });
+        })
         return r.replace(/@functions/g, functions)
     }
 

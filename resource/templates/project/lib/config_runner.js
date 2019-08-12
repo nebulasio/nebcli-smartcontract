@@ -1,8 +1,5 @@
-const fs = require('fs')
 const path = require('path')
 const ConfigManager = require('./config_manager.js')
-const NebAccount = require('nebulas').Account
-const NebUtil = require('./neb_util.js').testnet
 const Utils = require('./utils.js')
 const Logger = require('./logger.js')
 const HashChecker = require('./hash_cheker.js')
@@ -10,8 +7,13 @@ const HashChecker = require('./hash_cheker.js')
 
 class ConfigRunner {
 
-    constructor(contract) {
+    constructor(contract, isLocal) {
         this._logger = new Logger('ConfigRunner')
+        this._isMainnet = contract.isMainnet
+        this._isLocal = isLocal
+        if (this._isMainnet && this._isLocal) {
+            throw 'the main network environment isLocal should be false.'
+        }
         if (typeof (contract) === 'string') {
             this.contract = contract
         } else if (contract.__contractName) {
@@ -26,17 +28,27 @@ class ConfigRunner {
     }
 
     get _deployConfig() {
-        if (!this.__deployConfig) {
-            this.__deployConfig = ConfigManager.debugDeployConfig(this.contract)
-        }
-        return this.__deployConfig
+        return ConfigManager.deployConfig(this.contract, this._isMainnet, this._isLocal)
     }
 
     get _methodsConfig() {
-        if (!this.__methodsConfig) {
-            this.__methodsConfig = ConfigManager.debugMethodsConfig(this.contract)
+        return ConfigManager.methodsConfig(this.contract, this._isMainnet, this._isLocal)
+    }
+
+    async deploy() {
+        if (this._isLocal) {
+            await this.localDeploy()
+        } else {
+            await this.onlineDeploy()
         }
-        return this.__methodsConfig
+    }
+
+    async runMethods() {
+        if (this._isLocal) {
+            await this.localRunMethods()
+        } else {
+            await this.onlineRunMethods()
+        }
     }
 
     async localDeploy() {
@@ -44,8 +56,8 @@ class ConfigRunner {
         this._logger.d(this.contract, 'deploy begin.')
         let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
         let deployer = await this._deployer()
-        let r = c.setCaller(deployer.getAddressString()).deploy()
-        this._logger.d(this.contract, 'deploy result:', r ? JSON.stringify(r) : '')
+        let r = c.setAccount(deployer.getAddressString()).deploy()
+        this._logger.d(this.contract, 'deploy result:', JSON.stringify(r))
     }
 
     async localRunMethods() {
@@ -59,8 +71,8 @@ class ConfigRunner {
             this._printLine()
             this._logger.d(this.contract + '.' + m, 'begin.')
             let p = this._methodsConfig.params[m]
-            let caller = await this._account(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
-            c.setCaller(caller).setValue(p.value)
+            let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
+            c.setAccount(caller.getAddressString()).setValue(p.value)
             let r = Reflect.apply(c[m], c, p.args)
             this._logger.d(this.contract, m, 'result:', JSON.stringify(r))
         }
@@ -77,11 +89,11 @@ class ConfigRunner {
             return
         }
         this._logger.d('check status ' + r.txhash + ' ...')
-        let success = await new HashChecker(r.txhash).check()
+        let success = await new HashChecker(r.txhash, this._isMainnet).check()
         if (!success) {
             this._logger.d('deploy failed, error msg:', r.execute_error)
         } else {
-            ConfigManager.setOnlineContractAddress(this.contract, r.contract_address)
+            ConfigManager.setOnlineContractAddress(this.contract, r.contract_address, this._isMainnet)
             this._logger.d('deploy success, address:', r.contract_address, 'result:', r.execute_result ? r.execute_result : '')
         }
     }
@@ -92,14 +104,15 @@ class ConfigRunner {
             this._logger.d('testMethods is empty.')
             return
         }
-        let c = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let t = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let c = this._isMainnet ? t.mainnet : t.testnet
         for (let i in ms) {
             let m = ms[i]
             let n = Utils.trim(m, '@')
             this._printLine()
             this._logger.d(this.contract + '.' + m, 'begin...')
             let p = this._methodsConfig.params[n]
-            let caller = await this._account(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
+            let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
             c.setAccount(caller).setValue(p.value)
             let r = null
             if (m.startsWith('@')) {
@@ -110,7 +123,7 @@ class ConfigRunner {
             let success = null
             if (r.txhash) {
                 this._logger.d('check status ' + r.txhash + ' ...')
-                let checker = new HashChecker(r.txhash)
+                let checker = new HashChecker(r.txhash, this._isMainnet)
                 success = await checker.check()
                 r = checker.result
             } else {
@@ -129,14 +142,14 @@ class ConfigRunner {
     }
 
     async _deployer() {
-        return await this._account(this._deployConfig.deployer, this.contract + ' config deployer is null.')
+        return await ConfigManager.deployerValue(this._isMainnet)
     }
 
-    async _account(account, nullMsg) {
+    async _caller(account, nullMsg) {
         if (!account) {
             throw nullMsg
         }
-        return await ConfigManager.accountValue(account, this.contract, false)
+        return await ConfigManager.callerValue(account, this.contract, this._isMainnet)
     }
 
     _printLine() {

@@ -1,8 +1,8 @@
 
     async @functionTest(@args) {
-        return await NebUtil.callTest(this.account.getAddressString(), this.contractAddress, this.value, '@function', @args_array)
+        return await this.nebUtil.callTest(this.account.getAddressString(), this.contractAddress, this.value, '@function', @args_array)
     }
 
     async @function(@args) {
-        return await NebUtil.oneKeyCall(this.account, this.contractAddress, this.value, '@function', @args_array)
+        return await this.nebUtil.oneKeyCall(this.account, this.contractAddress, this.value, '@function', @args_array)
     }

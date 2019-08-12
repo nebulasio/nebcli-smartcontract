@@ -39,7 +39,12 @@ class MainGenerator {
     _genRequire() {
         let s = '/** Automatically generated code, please do not modify. */\n'
         this.projectInfo.contracts.forEach(c => {
-            s += "const " + c.name + " = require('./" + c.name + "/" + (this.isOnline ? 'online' : 'local') + ".js')\n"
+            if (this.isOnline) {
+                s += "const " + c.name + " = require('./" + c.name + "/online.js').testnet\n"
+                s += "const " + c.name + "Mainnet = require('./" + c.name + "/online.js').mainnet\n"
+            } else {
+                s += "const " + c.name + " = require('./" + c.name + "/local.js')\n"
+            }
         })
         s += '/** Automatically generated code; End. */\n'
         return s

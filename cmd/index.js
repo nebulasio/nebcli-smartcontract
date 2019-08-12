@@ -5,7 +5,7 @@ const program = require('commander')
 const nebdev = require('../index')
 
 function list(val) {
-    return val.split(',');
+    return val.split(',')
 }
 
 function getPath(v) {
@@ -40,12 +40,12 @@ program
     })
 
 program
-    .command('deploy [contracts...]')
+    .command('deploy <network>')
     .alias('d')
     .description('deploy contracts')
-    .action((contracts) => {
+    .action((network) => {
         if (nebdev.build(process.cwd())) {
-            nebdev.deploy(process.cwd(), contracts)
+            nebdev.deploy(process.cwd(), network)
         }
     })
 

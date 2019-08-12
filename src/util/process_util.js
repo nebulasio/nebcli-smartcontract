@@ -1,4 +1,4 @@
-const CP = require('child_process');
+const CP = require('child_process')
 
 
 class ProcessUtil {

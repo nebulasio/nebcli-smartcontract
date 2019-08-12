@@ -54,9 +54,9 @@ module.exports = {
         // }
     },
 
-    deploy: async function (workspace, contracts) {
+    deploy: async function (workspace, network) {
         // try {
-        await new Deploy(workspace).oneKeyDeploy(contracts)
+        await new Deploy(workspace).deploy(network)
         console.log('deploy complete.')
         return true
         // } catch (e) {

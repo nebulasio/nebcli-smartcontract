@@ -10,7 +10,7 @@ class Build {
         Utils.checkRoot(workspace)
         this.projectInfo = new ProjectInfo(workspace)
         this._check()
-        this.projectInfo.contracts.forEach(c => this._build(c));
+        this.projectInfo.contracts.forEach(c => this._build(c))
     }
 
     _check() {
@@ -18,8 +18,8 @@ class Build {
     }
 
     _build(contract) {
-        let sp = path.join(this.projectInfo.workspace, 'src', contract.name, 'main.js');
-        let dp = path.join(this.projectInfo.workspace, 'build', 'output', contract.name + '.js');
+        let sp = path.join(this.projectInfo.workspace, 'src', contract.name, 'main.js')
+        let dp = path.join(this.projectInfo.workspace, 'build', 'output', contract.name + '.js')
 
         let r = ''
         let lines = String(fs.readFileSync(sp)).split('\n')

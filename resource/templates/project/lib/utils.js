@@ -35,61 +35,61 @@ class Utils {
             var rl = readline.createInterface({
                 input: process.stdin,
                 output: process.stdout
-            });
+            })
             rl.question(question, function (answer) {
                 resolve(answer)
-                rl.close();
-            });
+                rl.close()
+            })
             rl.on("close", function () {
-            });
+            })
         })
     }
 
     readPwd(question) {
         return new Promise((resolve) => {
             if (question) {
-                process.stdout.write(question);
+                process.stdout.write(question)
             }
-            var stdin = process.stdin;
-            stdin.resume();
-            stdin.setRawMode(true);
-            stdin.resume();
-            stdin.setEncoding('utf8');
+            var stdin = process.stdin
+            stdin.resume()
+            stdin.setRawMode(true)
+            stdin.resume()
+            stdin.setEncoding('utf8')
 
-            var password = '';
+            var password = ''
             stdin.on('data', function (ch) {
-                ch = ch.toString('utf8');
+                ch = ch.toString('utf8')
 
                 switch (ch) {
                     case "\n":
                     case "\r":
                     case "\u0004":
                         // They've finished typing their password
-                        process.stdout.write('\n');
-                        stdin.setRawMode(false);
-                        stdin.pause();
+                        process.stdout.write('\n')
+                        stdin.setRawMode(false)
+                        stdin.pause()
                         resolve(password)
-                        break;
+                        break
                     case "\u0003":
                         // Ctrl-C
                         resolve(password)
-                        break;
+                        break
                     case String.fromCharCode(127):
-                        password = password.slice(0, password.length - 1);
-                        process.stdout.clearLine();
-                        process.stdout.cursorTo(0);
-                        process.stdout.write(question);
+                        password = password.slice(0, password.length - 1)
+                        process.stdout.clearLine()
+                        process.stdout.cursorTo(0)
+                        process.stdout.write(question)
                         process.stdout.write(password.split('').map(function () {
-                            return '*';
-                        }).join(''));
-                        break;
+                            return '*'
+                        }).join(''))
+                        break
                     default:
                         // More passsword characters
-                        process.stdout.write('*');
-                        password += ch;
-                        break;
+                        process.stdout.write('*')
+                        password += ch
+                        break
                 }
-            });
+            })
         })
     }
 

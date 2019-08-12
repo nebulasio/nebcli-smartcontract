@@ -3,18 +3,19 @@ const LocalContext = require('./neblocal.js').LocalContext
 const LocalContractManager = require('./local_contract_manager.js')
 const Utils = require('./utils.js')
 
+
 class LocalBase {
 
-    setCaller(caller) {
-        this._caller = caller
+    setAccount(account) {
+        this._account = account
         return this
     }
 
-    get caller() {
-        if(!this._caller) {
-            this._caller = TestKeys.caller.getAddressString()
+    get account() {
+        if(!this._account) {
+            this._account = TestKeys.caller.getAddressString()
         }
-        return this._caller
+        return this._account
     }
 
     setValue(value) {
@@ -35,8 +36,9 @@ class LocalBase {
         if (!ca) {
             throw name + ' has not yet been deployed.'
         }
-        return LocalContext._callContract(this.caller, ca, value, func, args)
+        return LocalContext._callContract(this.account, ca, value, func, args)
     }
 }
+
 
 module.exports = LocalBase

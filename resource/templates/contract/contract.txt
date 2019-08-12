@@ -10,7 +10,7 @@ const Event = neblocal.Event
 
 function @contract() {
     // You need to ensure that each contract has a different __contractName
-    this.__contractName = "@contract";
+    this.__contractName = "@contract"
 }
 
 @contract.prototype = {

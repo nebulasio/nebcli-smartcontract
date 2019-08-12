@@ -9,30 +9,45 @@ class ConfigGenerator {
     gen(projectInfo) {
         this.projectInfo = projectInfo
         projectInfo.contracts.forEach(c => {
-            this._gen(c, true)
-            this._gen(c, false)
+            this._genDeployCfg(true)
+            this._genDeployCfg(false)
+            this._genContractCfg(c, true)
+            this._genContractCfg(c, false)
         })
     }
 
-    _gen(contractInfo, isRelease) {
+    _genDeployCfg(isRelease) {
+        let p = path.join(this.projectInfo.workspace, 'config', (isRelease ? 'release' : 'debug'), 'deploy.json')
+        let newCfg = {
+            deployer: null,
+            contracts: []
+        }
+        let oldCfg = null
+        if (fs.existsSync(p)) {
+            oldCfg = JSON.parse(fs.readFileSync(p))
+        }
+        newCfg = this._mergeGlobalDeployConfig(newCfg, oldCfg)
+        Utils.checkAndMakeDir(p)
+        fs.writeFileSync(p, JSON.stringify(newCfg, null, 2))
+    }
+
+    _genContractCfg(contractInfo, isRelease) {
         let c = isRelease ? contractInfo.config.release : contractInfo.config.debug
 
-        let dc = this._deployCfg(contractInfo)
-        dc = this._mergeDeployConfig(dc, c.deploy)
+        let dc = this._deployArgsCfg(contractInfo)
+        dc = this._mergeDeployArgsConfig(dc, c.deploy)
         let dp = path.join(this.projectInfo.workspace, 'config', (isRelease ? 'release' : 'debug'), contractInfo.name, 'deploy.json')
         Utils.checkAndMakeDir(dp)
         fs.writeFileSync(dp, JSON.stringify(dc, null, 2))
 
-        if (!isRelease) {
-            let mc = this._methodsCfg(contractInfo)
-            mc = this._mergeMethodsConfig(mc, c.methods)
-            let mp = path.join(this.projectInfo.workspace, 'config', (isRelease ? 'release' : 'debug'), contractInfo.name, 'methods.json')
-            Utils.checkAndMakeDir(mp)
-            fs.writeFileSync(mp, JSON.stringify(mc, null, 2))
-        }
+        let mc = this._methodsCfg(contractInfo)
+        mc = this._mergeMethodsConfig(mc, c.methods)
+        let mp = path.join(this.projectInfo.workspace, 'config', (isRelease ? 'release' : 'debug'), contractInfo.name, 'methods.json')
+        Utils.checkAndMakeDir(mp)
+        fs.writeFileSync(mp, JSON.stringify(mc, null, 2))
     }
 
-    _deployCfg(contractInfo) {
+    _deployArgsCfg(contractInfo) {
         let m = Linq.from(contractInfo.methods).firstOrDefault(i => i.name === 'init')
         if (!m) {
             throw contractInfo.name + ' not found init method'
@@ -42,7 +57,6 @@ class ConfigGenerator {
             m.args.forEach(a => args[a] = null)
         }
         return {
-            deployer: null,
             args: args
         }
     }
@@ -69,9 +83,16 @@ class ConfigGenerator {
         return r
     }
 
-    _mergeDeployConfig(newCfg, oldCfg) {
+    _mergeGlobalDeployConfig(newCfg, oldCfg) {
         if (oldCfg) {
             newCfg.deployer = oldCfg.deployer
+            newCfg.contracts = oldCfg.contracts
+        }
+        return newCfg
+    }
+
+    _mergeDeployArgsConfig(newCfg, oldCfg) {
+        if (oldCfg) {
             newCfg.args = this._mergeArgs(newCfg.args, oldCfg.args)
         }
         return newCfg

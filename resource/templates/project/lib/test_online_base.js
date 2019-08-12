@@ -5,6 +5,10 @@ const ConfigManager = require('./config_manager.js')
 
 class OnlineBase {
 
+    constructor(isMainnet) {
+        this.isMainnet = isMainnet
+    }
+
     setPrivateKey(key) {
         this._account = NebAccount.NewAccount()
         this._account.setPrivateKey(key)
@@ -39,7 +43,7 @@ class OnlineBase {
 
     get contractAddress() {
         if (!this._contractAddress) {
-            this._contractAddress = ConfigManager.getOnlineContractAddress(this.__contractName)
+            this._contractAddress = ConfigManager.getOnlineContractAddress(this.__contractName, this.isMainnet)
         }
         if (!this._contractAddress) {
             throw 'contractAddress is null.'
