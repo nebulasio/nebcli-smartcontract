@@ -2,15 +2,6 @@
 /** Automatically generated code; End. */
 
 const TestKeys = require('../lib/test_keys.js')
-const NebUtil = require('../lib/neb_util.js')
 const ConfigRunner = require('../lib/config_runner.js')
-const HashChecher = require('../lib/hash_cheker.js')
+const HashChecker = require('../lib/hash_cheker.js')
 const DeployManager = require('../lib/deploy_manager.js')
-
-// 默认发布者
-let defaultDeployer = TestKeys.deployer
-// 默认调用者
-let defaultCaller = TestKeys.caller
-// 其他测试账号 (共10个)
-let otherKeys = TestKeys.otherKeys
-

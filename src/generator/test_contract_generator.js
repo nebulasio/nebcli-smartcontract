@@ -36,7 +36,7 @@ class Local {
     }
 
     _contractPath(contractInfo) {
-        return path.join(this.projectInfo.workspace, 'test', contractInfo.name, 'local.js')
+        return path.join(this.projectInfo.workspace, 'test/contracts', contractInfo.name, 'local.js')
     }
 
     _genContract(contractInfo) {
@@ -86,7 +86,7 @@ class Online {
     }
 
     _contractPath(contractInfo) {
-        return path.join(this.projectInfo.workspace, 'test', contractInfo.name, 'online.js')
+        return path.join(this.projectInfo.workspace, 'test/contracts', contractInfo.name, 'online.js')
     }
 
     _genContract(contractInfo) {

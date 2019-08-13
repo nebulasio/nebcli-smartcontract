@@ -68,12 +68,12 @@ const contractStorages = {}
 
 module.exports = {
 
-    blockStorage: new LocalStorage(path.join(__dirname, '../test/.data/block_chain.data')),
+    blockStorage: new LocalStorage(path.join(__dirname, '../test/data/block_chain.data')),
 
     contractStorage: function (name) {
         let storage = contractStorages[name]
         if (!storage) {
-            storage = new LocalStorage(path.join(__dirname, '../test/.data/contract_' + name + '.data'))
+            storage = new LocalStorage(path.join(__dirname, '../test/data/contract_' + name + '.data'))
             contractStorages[name] = storage
         }
         return storage

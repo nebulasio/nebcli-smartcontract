@@ -7,7 +7,7 @@ const NebAccount = require('nebulas').Account
 class TestKeys {
 
     constructor() {
-        let p = path.join(__dirname, '../test/.data/keys.json')
+        let p = path.join(__dirname, '../test/data/keys.json')
         if (!fs.existsSync(p)) {
             throw 'not found ' + p
         }

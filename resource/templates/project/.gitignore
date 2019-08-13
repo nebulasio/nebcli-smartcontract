@@ -3,4 +3,5 @@ package-lock.json
 node_modules/
 build/
 config/
-test/
+test/data
+test/contracts

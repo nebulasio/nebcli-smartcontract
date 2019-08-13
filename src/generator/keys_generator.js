@@ -14,7 +14,7 @@ class Generator {
 
     gen(projectInfo, count) {
         Utils.checkRoot(projectInfo.workspace)
-        let p = path.join(projectInfo.workspace, 'test/.data/keys.json')
+        let p = path.join(projectInfo.workspace, 'test/data/keys.json')
         if (fs.existsSync(p)) {
             return
         }
