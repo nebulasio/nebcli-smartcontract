@@ -1,3 +1,7 @@
     async deploy(@args) {
-        return await this.nebUtil.oneKeyDeploy(this.account, this._source, @args_array)
+        try {
+            return await this.nebUtil.oneKeyDeploy(this.account, this._source, @args_array)
+        } finally {
+            this._reset()
+        }
     }

@@ -12,7 +12,7 @@ class LocalBase {
     }
 
     get account() {
-        if(!this._account) {
+        if (!this._account) {
             this._account = TestKeys.caller
         }
         return this._account
@@ -31,12 +31,21 @@ class LocalBase {
     }
 
     call(contract, func, value, args) {
-        let name = Utils.contractName(contract)
-        let ca = LocalContractManager.getAddress(name)
-        if (!ca) {
-            throw name + ' has not yet been deployed.'
+        try {
+            let name = Utils.contractName(contract)
+            let ca = LocalContractManager.getAddress(name)
+            if (!ca) {
+                throw name + ' has not yet been deployed.'
+            }
+            return LocalContext._callContract(this.account.getAddressString(), ca, value, func, args)
+        } finally {
+            this._reset()
         }
-        return LocalContext._callContract(this.account.getAddressString(), ca, value, func, args)
+    }
+
+    _reset() {
+        this._account = null
+        this._value = 0
     }
 }
 

@@ -1,3 +1,7 @@
     deploy(@args) {
-        return LocalContext._deploy(this.account, @contract, @args_array)
+        try {
+            return LocalContext._deploy(this.account, @contract, @args_array)
+        } finally {
+            this._reset()
+        }
     }

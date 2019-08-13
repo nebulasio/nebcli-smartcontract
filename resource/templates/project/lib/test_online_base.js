@@ -62,6 +62,11 @@ class OnlineBase {
         }
         return this._value
     }
+
+    _reset() {
+        this._account = null
+        this._value = 0
+    }
 }
 
 module.exports = OnlineBase

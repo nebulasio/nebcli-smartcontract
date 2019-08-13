@@ -4,7 +4,7 @@ const LocalBase = require('../../../lib/test_local_base.js')
 const @contract = require('../../../src/@contract/main')
 
 
-class Test extends LocalBase {
+class Local extends LocalBase {
 
     get __contractClass() {
         return @contract
@@ -15,4 +15,4 @@ class Test extends LocalBase {
 }
 
 
-module.exports = new Test()
+module.exports = new Local()
