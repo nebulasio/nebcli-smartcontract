@@ -1,7 +1,7 @@
 
     async @functionTest(@args) {
         try {
-            return await this.nebUtil.callTest(this.account.getAddressString(), this.contractAddress, this.value, '@function', @args_array)
+            return await this.nebUtil.callTest(this._account.getAddressString(), this._contractAddress, this._value, '@function', @args_array)
         } finally {
             this._reset()
         }
@@ -9,7 +9,7 @@
 
     async @function(@args) {
         try {
-            return await this.nebUtil.oneKeyCall(this.account, this.contractAddress, this.value, '@function', @args_array)
+            return await this.nebUtil.oneKeyCall(this._account, this._contractAddress, this._value, '@function', @args_array)
         } finally {
             this._reset()
         }

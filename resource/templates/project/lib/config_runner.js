@@ -54,7 +54,7 @@ class ConfigRunner {
     async _localDeploy() {
         this._printLine()
         this._logger.d(this.contract, 'deploy begin.')
-        let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
+        let c = require(path.join(__dirname, '../test/contracts', this.contract, 'local.js'))
         let deployer = await this._deployer()
         let r = c._setAccount(deployer)._deploy()
         this._logger.d(this.contract, 'deploy result:', JSON.stringify(r))
@@ -65,7 +65,7 @@ class ConfigRunner {
         if (!ms) {
             ms = this._methodsConfig.allMethods
         }
-        let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
+        let c = require(path.join(__dirname, '../test/contracts', this.contract, 'local.js'))
         for (let i in ms) {
             let m = Utils.trim(ms[i], '@')
             this._printLine()
@@ -82,7 +82,7 @@ class ConfigRunner {
         this._printLine()
         this._logger.d(this.contract, 'deploy begin...')
         let account = await this._deployer()
-        let t = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let t = require(path.join(__dirname, '../test/contracts', this.contract, 'online.js'))
         let c = this._isMainnet ? t.mainnet : t.testnet
         let r = await c._setAccount(account)._deploy()
         if (!r) {
@@ -105,7 +105,7 @@ class ConfigRunner {
             this._logger.d('testMethods is empty.')
             return
         }
-        let t = require(path.join(__dirname, '../test', this.contract, 'online.js'))
+        let t = require(path.join(__dirname, '../test/contracts', this.contract, 'online.js'))
         let c = this._isMainnet ? t.mainnet : t.testnet
         for (let i in ms) {
             let m = ms[i]
