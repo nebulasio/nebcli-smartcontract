@@ -110,6 +110,17 @@ class Utils {
             })
         })
     }
+
+    trim(str, s) {
+        str = str.trim()
+        while (str.startsWith(s)) {
+            str = str.substr(s.length, str.length - s.length)
+        }
+        while (str.endsWith(s)) {
+            str = str.substr(str.length - s.length, s.length)
+        }
+        return str
+    }
 }
 
 module.exports = new Utils()

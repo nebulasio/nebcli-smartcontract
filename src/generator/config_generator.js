@@ -65,7 +65,7 @@ class ConfigGenerator {
         let ms = Linq.from(contractInfo.methods).where(i => i.name !== 'init' && i.name !== 'accept').toArray()
         let r = {
             allMethods: Linq.from(ms).select(m => m.name).toArray(),
-            testMethods: null,
+            testMethods: [],
         }
         let params = {}
         ms.forEach(m => {
@@ -101,7 +101,7 @@ class ConfigGenerator {
     _mergeMethodsConfig(newCfg, oldCfg) {
         if (oldCfg) {
             if (oldCfg.testMethods) {
-                newCfg.testMethods = Linq.from(oldCfg.testMethods).where(m => newCfg.allMethods.indexOf(m) >= 0).toArray()
+                newCfg.testMethods = Linq.from(oldCfg.testMethods).where(m => newCfg.allMethods.indexOf(Utils.trim(m, "@")) >= 0).toArray()
             }
             if (oldCfg.params) {
                 for (let name in newCfg.params) {

@@ -62,7 +62,7 @@ class ConfigRunner {
 
     async _localRunMethods() {
         let ms = this._methodsConfig.testMethods
-        if (!ms) {
+        if (!ms || ms.length === 0) {
             ms = this._methodsConfig.allMethods
         }
         let c = require(path.join(__dirname, '../test/contracts', this.contract, 'local.js'))
@@ -121,23 +121,25 @@ class ConfigRunner {
             } else {
                 r = await Reflect.apply(c[n + 'Test'], c, p.args)
             }
-            let success = null
             if (r.txhash) {
                 this._logger.d('check status ' + r.txhash + ' ...')
                 let checker = new HashChecker(r.txhash, this._isMainnet)
-                success = await checker.check()
+                let success = await checker.check()
                 r = checker.result
+                if (!success) {
+                    this._logger.d(this.contract + '.' + m, 'execute error:', r.execute_err)
+                } else {
+                    this._logger.d(this.contract + '.' + m, 'execute success result:', r.execute_result)
+                }
             } else {
-                success = Utils.isEmpty(r.execute_error)
-                if (success) {
+                if (r.result) {
                     r.execute_result = r.result
                     Reflect.deleteProperty(r, 'result')
+                    this._logger.d(this.contract + '.' + m, 'execute result:', r.execute_result)
                 }
-            }
-            if (!success) {
-                this._logger.d(this.contract + '.' + m, 'execute error:', r.execute_error)
-            } else {
-                this._logger.d(this.contract + '.' + m, 'execute success result:', r.execute_result)
+                if (r.execute_err) {
+                    this._logger.d(this.contract + '.' + m, 'execute error:', r.execute_err)
+                }
             }
         }
     }

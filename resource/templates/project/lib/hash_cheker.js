@@ -12,7 +12,7 @@ class HashCheker {
     check() {
         return new Promise((resolve) => {
             this._resolve = resolve
-            this._check()
+            setTimeout(() => { this._check() }, 17000);
         })
     }
 
