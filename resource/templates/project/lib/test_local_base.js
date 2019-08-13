@@ -13,7 +13,7 @@ class LocalBase {
 
     get account() {
         if(!this._account) {
-            this._account = TestKeys.caller.getAddressString()
+            this._account = TestKeys.caller
         }
         return this._account
     }
@@ -36,7 +36,7 @@ class LocalBase {
         if (!ca) {
             throw name + ' has not yet been deployed.'
         }
-        return LocalContext._callContract(this.account, ca, value, func, args)
+        return LocalContext._callContract(this.account.getAddressString(), ca, value, func, args)
     }
 }
 

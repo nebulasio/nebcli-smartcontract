@@ -56,7 +56,7 @@ class ConfigRunner {
         this._logger.d(this.contract, 'deploy begin.')
         let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
         let deployer = await this._deployer()
-        let r = c.setAccount(deployer.getAddressString()).deploy()
+        let r = c.setAccount(deployer).deploy()
         this._logger.d(this.contract, 'deploy result:', JSON.stringify(r))
     }
 
@@ -72,7 +72,7 @@ class ConfigRunner {
             this._logger.d(this.contract + '.' + m, 'begin.')
             let p = this._methodsConfig.params[m]
             let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
-            c.setAccount(caller.getAddressString()).setValue(p.value)
+            c.setAccount(caller).setValue(p.value)
             let r = Reflect.apply(c[m], c, p.args)
             this._logger.d(this.contract, m, 'result:', JSON.stringify(r))
         }
