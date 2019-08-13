@@ -31,14 +31,14 @@ program
 
 program
     .command('build')
-    .description('build project')
+    .description('build project.')
     .action(() => {
         nebdev.build(process.cwd())
     })
 
 program
     .command('deploy <network>')
-    .description('deploy contracts')
+    .description('deploy contracts.')
     .action((network) => {
         if (nebdev.build(process.cwd())) {
             nebdev.deploy(process.cwd(), network)
