@@ -17,7 +17,6 @@ function getPath(v) {
 
 program
     .command('init <contract> [otherContracts...]')
-    .alias('i')
     .description('init project.')
     .action((contract, otherContracts) => {
         nebdev.init(process.cwd(), [contract].concat(otherContracts))
@@ -25,7 +24,6 @@ program
 
 program
     .command('add <contract> [otherContracts...]')
-    .alias('a')
     .description('add contracts.')
     .action((contract, otherContracts) => {
         nebdev.add(process.cwd(), [contract].concat(otherContracts))
@@ -33,7 +31,6 @@ program
 
 program
     .command('build')
-    .alias('b')
     .description('build project')
     .action(() => {
         nebdev.build(process.cwd())
@@ -41,7 +38,6 @@ program
 
 program
     .command('deploy <network>')
-    .alias('d')
     .description('deploy contracts')
     .action((network) => {
         if (nebdev.build(process.cwd())) {
@@ -51,7 +47,7 @@ program
 
 program
     .command('generate')
-    .alias('g')
+    .alias('gen')
     .description('generate test code.')
     .action(() => {
         nebdev.build(process.cwd())
@@ -59,8 +55,8 @@ program
     })
 
 program
-    .command('keystore <path>')
-    .alias('k')
+    .command('key <path>')
+    .alias('keystore')
     .description('print keystore info.')
     .action((path) => {
         nebdev.printKeystore(getPath(path))
