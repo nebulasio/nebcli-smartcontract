@@ -1,10 +1,10 @@
 /** Automatically generated code, please do not modify. */
-const LocalContext = require('../../../lib/neblocal.js').LocalContext
-const LocalBase = require('../../../lib/test_local_base.js')
+const _LocalContext = require('../../../lib/neblocal.js').LocalContext
+const _LocalBase = require('../../../lib/test_local_base.js')
 const @contract = require('../../../src/@contract/main')
 
 
-class Local extends LocalBase {
+class _Local extends _LocalBase {
 
     get __contractClass() {
         return @contract
@@ -15,4 +15,4 @@ class Local extends LocalBase {
 }
 
 
-module.exports = new Local()
+module.exports = new _Local()

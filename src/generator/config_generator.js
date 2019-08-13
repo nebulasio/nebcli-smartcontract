@@ -8,9 +8,9 @@ class ConfigGenerator {
 
     gen(projectInfo) {
         this.projectInfo = projectInfo
+        this._genDeployCfg(true)
+        this._genDeployCfg(false)
         projectInfo.contracts.forEach(c => {
-            this._genDeployCfg(true)
-            this._genDeployCfg(false)
             this._genContractCfg(c, true)
             this._genContractCfg(c, false)
         })
@@ -19,7 +19,7 @@ class ConfigGenerator {
     _genDeployCfg(isRelease) {
         let p = path.join(this.projectInfo.workspace, 'config', (isRelease ? 'release' : 'debug'), 'deploy.json')
         let newCfg = {
-            deployer: null,
+            deployer: "{deployer}",
             contracts: []
         }
         let oldCfg = null
@@ -74,7 +74,7 @@ class ConfigGenerator {
                 m.args.forEach(a => args[a] = null)
             }
             params[m.name] = {
-                caller: null,
+                caller: "{caller}",
                 value: 0,
                 args: args
             }

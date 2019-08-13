@@ -56,7 +56,7 @@ class ConfigRunner {
         this._logger.d(this.contract, 'deploy begin.')
         let c = require(path.join(__dirname, '../test', this.contract, 'local.js'))
         let deployer = await this._deployer()
-        let r = c.setAccount(deployer).deploy()
+        let r = c._setAccount(deployer)._deploy()
         this._logger.d(this.contract, 'deploy result:', JSON.stringify(r))
     }
 
@@ -72,7 +72,7 @@ class ConfigRunner {
             this._logger.d(this.contract + '.' + m, 'begin.')
             let p = this._methodsConfig.params[m]
             let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
-            c.setAccount(caller).setValue(p.value)
+            c._setAccount(caller)._setValue(p.value)
             let r = Reflect.apply(c[m], c, p.args)
             this._logger.d(this.contract, m, 'result:', JSON.stringify(r))
         }
@@ -84,7 +84,7 @@ class ConfigRunner {
         let account = await this._deployer()
         let t = require(path.join(__dirname, '../test', this.contract, 'online.js'))
         let c = this._isMainnet ? t.mainnet : t.testnet
-        let r = await c.setAccount(account).deploy()
+        let r = await c._setAccount(account)._deploy()
         if (!r) {
             this._logger.d('deploy failed.')
             return
@@ -114,7 +114,7 @@ class ConfigRunner {
             this._logger.d(this.contract + '.' + m, 'begin...')
             let p = this._methodsConfig.params[n]
             let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
-            c.setAccount(caller).setValue(p.value)
+            c._setAccount(caller)._setValue(p.value)
             let r = null
             if (m.startsWith('@')) {
                 r = await Reflect.apply(c[n], c, p.args)

@@ -9,63 +9,63 @@ class OnlineBase {
         this.isMainnet = isMainnet
     }
 
-    setPrivateKey(key) {
-        this._account = NebAccount.NewAccount()
-        this._account.setPrivateKey(key)
+    _setPrivateKey(key) {
+        this.__account = NebAccount.NewAccount()
+        this.__account.setPrivateKey(key)
         return this
     }
 
-    setKeystore(keystore, pwd) {
-        this._account = NebAccount.NewAccount()
-        this._account.fromKey(keystore, pwd, false)
+    _setKeystore(keystore, pwd) {
+        this.__account = NebAccount.NewAccount()
+        this.__account.fromKey(keystore, pwd, false)
         return this
     }
 
-    setAccount(account) {
-        this._account = account
+    _setAccount(account) {
+        this.__account = account
         return this
     }
 
-    get account() {
-        if (!this._account) {
-            this._account = TestKeys.caller
+    get _account() {
+        if (!this.__account) {
+            this.__account = TestKeys.caller
         }
-        if (!this._account) {
+        if (!this.__account) {
             throw 'account is null.'
         }
-        return this._account
+        return this.__account
     }
 
-    setContractAddress(contractAddress) {
-        this._contractAddress = contractAddress
+    _setContractAddress(contractAddress) {
+        this.__contractAddress = contractAddress
         return this
     }
 
-    get contractAddress() {
-        if (!this._contractAddress) {
-            this._contractAddress = ConfigManager.getOnlineContractAddress(this.__contractName, this.isMainnet)
+    get _contractAddress() {
+        if (!this.__contractAddress) {
+            this.__contractAddress = ConfigManager.getOnlineContractAddress(this.__contractName, this.isMainnet)
         }
-        if (!this._contractAddress) {
+        if (!this.__contractAddress) {
             throw 'contractAddress is null.'
         }
-        return this._contractAddress
+        return this.__contractAddress
     }
 
-    setValue(value) {
-        this._value = value
+    _setValue(value) {
+        this.__value = value
         return this
     }
 
-    get value() {
-        if (!this._value) {
-            this._value = 0
+    get _value() {
+        if (!this.__value) {
+            this.__value = 0
         }
-        return this._value
+        return this.__value
     }
 
     _reset() {
-        this._account = null
-        this._value = 0
+        this.__account = null
+        this.__value = 0
     }
 }
 

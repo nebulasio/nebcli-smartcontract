@@ -1,6 +1,6 @@
-    deploy(@args) {
+    _deploy(@args) {
         try {
-            return LocalContext._deploy(this.account, @contract, @args_array)
+            return _LocalContext._deploy(this._account, @contract, @args_array)
         } finally {
             this._reset()
         }
