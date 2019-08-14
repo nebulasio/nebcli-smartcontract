@@ -198,15 +198,15 @@ MyContractMainnet 为 主网环境封装类
 ``` javascript
 async function test() {
 
-    console.log('deploy bging...')
+    console.log('deploy begin...')
     // 在测试网发布合约
     await MyContract._deploy()
 
-    console.log('setData bging...')
+    console.log('setData begin...')
     // 调用合约方法 setData
     await MyContract.setData('hello world!')
 
-    console.log('getData bging...')
+    console.log('getData begin...')
     /** 
     * 调用合约方法 getData 并打印结果 
     *

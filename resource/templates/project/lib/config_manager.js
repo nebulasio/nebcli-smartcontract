@@ -64,9 +64,9 @@ class ConfigManager {
         throw 'contract value "' + v + '" not found.'
     }
 
-    getOnlineContractAddress(contract, isRelease) {
+    getOnlineContractAddress(contract) {
         let name = Utils.contractName(contract)
-        let p = path.join(__dirname, '../config', (isRelease ? 'release' : 'debug'), name, 'address.txt')
+        let p = path.join(__dirname, '../config', (contract.isMainnet ? 'release' : 'debug'), name, 'address.txt')
         if (fs.existsSync(p)) {
             return String(fs.readFileSync(p))
         } else {

@@ -75,7 +75,7 @@ class ConfigGenerator {
             }
             params[m.name] = {
                 caller: "{caller}",
-                value: 0,
+                value: "0",
                 args: args
             }
         })
