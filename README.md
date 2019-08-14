@@ -44,3 +44,7 @@ nebdev deploy <network> // network = mainnet|testnet
 ```
 nebdev -h
 ```
+
+## 3. documents
+
+[中文文档](document-zh.md "中文文档")
