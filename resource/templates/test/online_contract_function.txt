@@ -9,7 +9,7 @@
 
     async @function(@args) {
         try {
-            return await this.nebUtil.oneKeyCall(this._account, this._contractAddress, this._value, '@function', @args_array)
+            return await this._getTxResult('@contract.@function', await this.nebUtil.oneKeyCall(this._account, this._contractAddress, this._value, '@function', @args_array))
         } finally {
             this._reset()
         }

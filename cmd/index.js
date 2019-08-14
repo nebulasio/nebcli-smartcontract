@@ -4,9 +4,6 @@ const path = require('path')
 const program = require('commander')
 const nebdev = require('../index')
 
-function list(val) {
-    return val.split(',')
-}
 
 function getPath(v) {
     if (v.startsWith('/')) {
@@ -55,11 +52,12 @@ program
     })
 
 program
-    .command('key <path>')
-    .alias('keystore')
+    .command('keystore <path>')
+    .alias('key')
     .description('print keystore info.')
     .action((path) => {
         nebdev.printKeystore(getPath(path))
     })
+
 
 program.parse(process.argv)

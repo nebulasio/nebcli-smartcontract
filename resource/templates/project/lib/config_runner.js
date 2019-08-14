@@ -84,19 +84,7 @@ class ConfigRunner {
         let account = await this._deployer()
         let t = require(path.join(__dirname, '../test/contracts', this.contract, 'online.js'))
         let c = this._isMainnet ? t.mainnet : t.testnet
-        let r = await c._setAccount(account)._deploy()
-        if (!r) {
-            this._logger.d('deploy failed.')
-            return
-        }
-        this._logger.d('check status ' + r.txhash + ' ...')
-        let success = await new HashChecker(r.txhash, this._isMainnet).check()
-        if (!success) {
-            this._logger.d('deploy failed, error msg:', r.execute_error)
-        } else {
-            ConfigManager.setOnlineContractAddress(this.contract, r.contract_address, this._isMainnet)
-            this._logger.d('deploy success, address:', r.contract_address, 'result:', r.execute_result ? r.execute_result : '')
-        }
+        await c._setAccount(account)._deploy()
     }
 
     async _onlineRunMethods() {
@@ -115,23 +103,10 @@ class ConfigRunner {
             let p = this._methodsConfig.params[n]
             let caller = await this._caller(p.caller, this.contract + '.' + m + ' ' + ' config caller is null.')
             c._setAccount(caller)._setValue(p.value)
-            let r = null
             if (m.startsWith('@')) {
-                r = await Reflect.apply(c[n], c, p.args)
+                await Reflect.apply(c[n], c, p.args)
             } else {
-                r = await Reflect.apply(c[n + 'Test'], c, p.args)
-            }
-            if (r.txhash) {
-                this._logger.d('check status ' + r.txhash + ' ...')
-                let checker = new HashChecker(r.txhash, this._isMainnet)
-                let success = await checker.check()
-                r = checker.result
-                if (!success) {
-                    this._logger.d(this.contract + '.' + m, 'execute error:', r.execute_err)
-                } else {
-                    this._logger.d(this.contract + '.' + m, 'execute success result:', r.execute_result)
-                }
-            } else {
+                let r = await Reflect.apply(c[n + 'Test'], c, p.args)
                 if (r.result) {
                     r.execute_result = r.result
                     Reflect.deleteProperty(r, 'result')

@@ -105,13 +105,15 @@ class Online {
 
     _genDeployFunction(contractInfo, methodInfo) {
         let r = String(fs.readFileSync(path.join(__dirname, '../../resource/templates/test/online_contract_deploy.txt')))
-        return r.replace(/@args_array/g, _genArgsArray(methodInfo.args))
+        return r.replace(/@contract/g, contractInfo.name)
+            .replace(/@args_array/g, _genArgsArray(methodInfo.args))
             .replace(/@args/g, _genArgs(methodInfo.args))
     }
 
     _genFunction(contractInfo, methodInfo) {
         let r = String(fs.readFileSync(path.join(__dirname, '../../resource/templates/test/online_contract_function.txt')))
-        return r.replace(/@function/g, methodInfo.name)
+        return r.replace(/@contract/g, contractInfo.name)
+            .replace(/@function/g, methodInfo.name)
             .replace(/@args_array/g, _genArgsArray(methodInfo.args))
             .replace(/@args/g, _genArgs(methodInfo.args))
     }

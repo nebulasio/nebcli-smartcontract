@@ -1,12 +1,15 @@
 const NebAccount = require('nebulas').Account
 const TestKeys = require('./test_keys.js')
 const ConfigManager = require('./config_manager.js')
+const HashChecker = require('./hash_cheker.js')
+const Logger = require('./logger.js')
 
 
 class OnlineBase {
 
     constructor(isMainnet) {
         this.isMainnet = isMainnet
+        this._logger = new Logger('Online')
     }
 
     _setPrivateKey(key) {
@@ -66,6 +69,46 @@ class OnlineBase {
     _reset() {
         this.__account = null
         this.__value = 0
+    }
+
+    async _getDeployResult(contractName, r) {
+        if (!r) {
+            let msg = contractName + '.deploy failed'
+            this._logger.d(msg)
+            throw msg
+        }
+        this._logger.d('check status ' + r.txhash + ' ...')
+        let address = r.contract_address
+        let checker = new HashChecker(r.txhash, this.isMainnet)
+        let success = await checker.check()
+        r = checker.result
+        if (!success) {
+            this._logger.d(contractName + '.deploy', 'execute error:', r.execute_err)
+            throw r.execute_err
+        } else {
+            ConfigManager.setOnlineContractAddress(contractName, address, this.isMainnet)
+            this._logger.d(contractName + '.deploy', 'execute success', 'contract address:', address, 'result:', r.execute_result)
+            return r.execute_result
+        }
+    }
+
+    async _getTxResult(info, r) {
+        if (!r) {
+            let msg = info + ' failed'
+            this._logger.d(msg)
+            throw msg
+        }
+        this._logger.d('check status ' + r.txhash + ' ...')
+        let checker = new HashChecker(r.txhash, this.isMainnet)
+        let success = await checker.check()
+        r = checker.result
+        if (!success) {
+            this._logger.d(info, 'execute error:', r.execute_err)
+            throw r.execute_err
+        } else {
+            this._logger.d(info, 'execute success result:', r.execute_result)
+            return r.execute_result
+        }
     }
 }
 
