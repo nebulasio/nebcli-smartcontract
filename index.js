@@ -12,6 +12,7 @@ module.exports = {
     init: function (workspace, contractNames) {
         // try {
         Initializer.init(workspace, contractNames)
+        Generator.gen(workspace)
         console.log('init complete.')
         return true
         // } catch (e) {
