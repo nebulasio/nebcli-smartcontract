@@ -130,6 +130,9 @@ const LocalContext = {
         this._transfer(from, contract, value)
         try {
             let c = new BlockContract(contract).contract
+            if (!c[func]) {
+                throw c.__contractName + '.' + func + ' not found.'
+            }
             let r = c[func].apply(c, args)
             return r
         } catch (e) {
@@ -340,4 +343,3 @@ module.exports = {
     Event: Event,
     LocalContext: LocalContext
 }
-
