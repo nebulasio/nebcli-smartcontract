@@ -61,6 +61,26 @@ const LocalContext = {
     _transactions: [],
 
     transfer: function (from, to, val) {
+        let senderIsUser = LocalContractManager.getClass(from) == null
+        let toClass = LocalContractManager.getClass(to)
+        let receiverIsContract = toClass != null
+        if (!from) {
+            if (receiverIsContract) {
+                throw 'cannot add nas to the contract.'
+            }
+        } else {
+            if (!senderIsUser) {
+                throw 'contract cannot be the sender.'
+            }
+        }
+        if (senderIsUser && receiverIsContract) {
+            this._callContract(from, to, val, 'accept', [])
+        } else {
+            this._transfer(from, to, val)
+        }
+    },
+
+    _transfer: function (from, to, val) {
         val = new BigNumber(val)
         if (from) {
             let b = NasBalance.get(from)
@@ -107,13 +127,13 @@ const LocalContext = {
 
     _callContract: function (from, contract, value, func, args) {
         this._pushTransaction(this._newTransaction(from, contract, value))
-        this.transfer(from, contract, value)
+        this._transfer(from, contract, value)
         try {
             let c = new BlockContract(contract).contract
             let r = c[func].apply(c, args)
             return r
         } catch (e) {
-            this.transfer(contract, from, value)
+            this._transfer(contract, from, value)
             console.log(e)
             throw e
         } finally {
@@ -181,12 +201,12 @@ class BlockContract {
     call() {
         let tx = LocalContext._newTransaction(Blockchain.transaction.to, this.address, this.amount)
         LocalContext._pushTransaction(tx)
-        LocalContext.transfer(tx.from, tx.to, this.amount)
+        LocalContext._transfer(tx.from, tx.to, this.amount)
         try {
             let a = Array.from(arguments)
             return this.contract[a[0]].apply(this.contract, a.slice(1, a.length))
         } catch (e) {
-            LocalContext.transfer(this.address, Blockchain.transaction.to, this.amount)
+            LocalContext._transfer(this.address, Blockchain.transaction.to, this.amount)
             throw e
         } finally {
             LocalContext._popTransaction()
@@ -286,7 +306,7 @@ const Blockchain = {
     },
 
     transfer: function (address, val) {
-        LocalContext.transfer(Blockchain.transaction.to, address, val)
+        LocalContext._transfer(Blockchain.transaction.to, address, val)
         return true
     },
 
