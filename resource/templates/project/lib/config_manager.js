@@ -110,9 +110,9 @@ class ConfigManager {
 
     async _keystoreAccount(folderPath, v) {
         let p = Utils.getConfigPath(folderPath, v)
-        let pwd = await Utils.readPwd('password:')
+        let pwd = await Utils.readPwd('keystore password:')
         let a = NebAccount.NewAccount()
-        a.fromKey(fs.readFileSync(p), pwd, false)
+        a.fromKey(String(fs.readFileSync(p)), pwd, false)
         return a
     }
 
