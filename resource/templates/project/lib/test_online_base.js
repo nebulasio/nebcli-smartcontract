@@ -46,7 +46,7 @@ class OnlineBase {
 
     get _contractAddress() {
         if (!this.__contractAddress) {
-            this.__contractAddress = ConfigManager.getOnlineContractAddress(this)
+            this.__contractAddress = ConfigManager.getOnlineContractAddress(this.__contractName)
         }
         if (!this.__contractAddress) {
             throw 'contractAddress is null.'
