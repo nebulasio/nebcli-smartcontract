@@ -5,3 +5,10 @@ const TestKeys = require('../lib/test_keys.js')
 const ConfigRunner = require('../lib/config_runner.js')
 const ConfigManager = require('../lib/config_manager.js')
 const NebUtil = require('../lib/neb_util.js')
+
+
+async function main() {
+
+}
+
+main()

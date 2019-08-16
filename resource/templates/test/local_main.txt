@@ -7,3 +7,10 @@ const ConfigRunner = require('../lib/config_runner.js')
 
 // 清空模拟环境数据
 LocalContext.clearData()
+
+
+async function main() {
+
+}
+
+main()
