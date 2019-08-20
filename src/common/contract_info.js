@@ -8,7 +8,7 @@ class MethodInfo {
 
     constructor(f) {
         let s = f.toString()
-        let reg = new RegExp(/function\s+\((.*)\)/)
+        let reg = new RegExp(/\w+\s*\((.*)\)/)
         this.name = f.name
         if (reg.test(s)) {
             let args = RegExp.$1.trim().split(',')
@@ -30,14 +30,15 @@ class ContractInfo {
 
         this.name = contract.__contractName
         this.methods = []
-        for (let key in contract) {
+        let p = Reflect.getPrototypeOf(contract)
+        Object.getOwnPropertyNames(p).forEach(key => {
             const f = contract[key]
             if (typeof (f) === 'function') {
                 if (f.name && !f.name.startsWith('_')) {
                     this.methods.push(new MethodInfo(f))
                 }
             }
-        }
+        })
         this.config = { release: this._releaseConfig(), debug: this._debugConfig() }
     }
 

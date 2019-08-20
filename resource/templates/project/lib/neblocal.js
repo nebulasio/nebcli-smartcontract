@@ -178,7 +178,9 @@ const LocalContext = {
         return {
             from: from,
             to: to,
-            value: new BigNumber(value)
+            value: new BigNumber(value),
+            gasPrice: 0,
+            gasLimit: 0
         }
     },
 }
