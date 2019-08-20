@@ -33,10 +33,8 @@ class ContractInfo {
         let p = Reflect.getPrototypeOf(contract)
         Object.getOwnPropertyNames(p).forEach(key => {
             const f = contract[key]
-            if (typeof (f) === 'function') {
-                if (f.name && !f.name.startsWith('_')) {
-                    this.methods.push(new MethodInfo(f))
-                }
+            if (typeof (f) === 'function' && key !== 'constructor' && f.name && !f.name.startsWith('_')) {
+                this.methods.push(new MethodInfo(f))
             }
         })
         this.config = { release: this._releaseConfig(), debug: this._debugConfig() }
