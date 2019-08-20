@@ -92,6 +92,18 @@ class OnlineBase {
         }
     }
 
+    _testResult(r) {
+        if (!r) {
+            throw 'netwok error.'
+        }
+        if (r.result) {
+            return JSON.parse(r.result)
+        }
+        if (r.execute_err !== '') {
+            throw r.execute_err
+        }
+    }
+
     async _getTxResult(info, r) {
         if (!r) {
             let msg = info + ' failed'

@@ -1,7 +1,7 @@
 
     async @functionTest(@args) {
         try {
-            return await this.nebUtil.callTest(this._account.getAddressString(), this._contractAddress, this._value, '@function', @args_array)
+            return this._testResult(await this.nebUtil.callTest(this._account.getAddressString(), this._contractAddress, this._value, '@function', @args_array))
         } finally {
             this._reset()
         }

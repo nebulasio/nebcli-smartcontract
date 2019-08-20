@@ -1,6 +1,6 @@
     async _deployTest(@args) {
         try {
-            return await this.nebUtil.deployTest(this._account.getAddressString(), this._source, @args_array)
+            return this._testResult(await this.nebUtil.deployTest(this._account.getAddressString(), this._source, @args_array))
         } finally {
             this._reset()
         }

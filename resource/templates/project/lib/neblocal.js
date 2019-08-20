@@ -25,10 +25,16 @@ class MapStorage {
 
     get(key) {
         let s = this.storage.getItem(this._key(key))
+        if (s == null || typeof s === 'undefined') {
+            return null
+        }
         return this.deserializer(s)
     }
 
     set(key, value) {
+        if (typeof value === 'undefined') {
+            value = null
+        }
         this.storage.setItem(this._key(key), this.serializer(value))
     }
 
@@ -54,6 +60,14 @@ const NasBalance = new MapStorage(blockStorage, "__NEBULAS_BALANCE", function (v
     }
     return new BigNumber(val)
 })
+
+function getBalance(address) {
+    let r = NasBalance.get(address)
+    if (r == null) {
+        r = new BigNumber(0)
+    }
+    return r
+}
 
 
 const LocalContext = {
@@ -83,7 +97,7 @@ const LocalContext = {
     _transfer: function (from, to, val) {
         val = new BigNumber(val)
         if (from) {
-            let b = NasBalance.get(from)
+            let b = getBalance(from)
             if (val.gt(b)) {
                 throw ("Insufficient balance")
             }
@@ -94,7 +108,7 @@ const LocalContext = {
     },
 
     getBalance: function (address) {
-        return NasBalance.get(address)
+        return getBalance(address)
     },
 
     getContractAddress: function (contract) {
@@ -156,7 +170,7 @@ const LocalContext = {
     },
 
     _addNas: function (address, val) {
-        let b = NasBalance.get(address)
+        let b = getBalance(address)
         b = b.plus(val)
         NasBalance.set(address, b)
     },
@@ -249,6 +263,9 @@ const LocalContractStorage = {
         Object.defineProperty(obj, name, {
             get: function () {
                 let r = storage.getItem(name)
+                if (r == null || typeof r === 'undefined') {
+                    return null
+                }
                 if (serializer && serializer.parse) {
                     r = serializer.parse(storage.getItem(name))
                 } else {
@@ -257,6 +274,9 @@ const LocalContractStorage = {
                 return r
             },
             set: function (val) {
+                if (typeof val === 'undefined') {
+                    val = null
+                }
                 if (serializer && serializer.stringify) {
                     val = serializer.stringify(val)
                 } else {
@@ -327,7 +347,7 @@ const Blockchain = {
 
     getAccountState: function (address) {
         return {
-            balance: NasBalance.get(address),
+            balance: getBalance(address).toString(10),
             nonce: 0
         }
     },

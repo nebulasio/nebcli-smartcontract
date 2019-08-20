@@ -11,6 +11,9 @@ class Utils {
         if (typeof (contract) === 'string') { // ContractName
             return contract
         }
+        if (contract.__contractName) {
+            return contract.__contractName
+        }
         let cls = null
         if (contract.__contractClass) { // TestContract
             cls = contract.__contractClass
