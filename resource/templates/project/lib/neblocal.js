@@ -160,10 +160,7 @@ const LocalContext = {
 
     _deploy: function (from, contract, args) {
         let name = Utils.contractName(contract)
-        let address = LocalContractManager.getAddress(name)
-        if (!address) {
-            address = NebAccount.NewAccount().getAddressString()
-        }
+        let address = NebAccount.NewAccount().getAddressString()
         LocalContractManager.rigester(name, address)
         LocalStorage.contractStorage(name).clear()
         return this._callContract(from, address, 0, 'init', args)
@@ -365,3 +362,4 @@ module.exports = {
     Event: Event,
     LocalContext: LocalContext
 }
+

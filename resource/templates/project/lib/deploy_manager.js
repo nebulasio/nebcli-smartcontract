@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const ConfigManager = require('./config_manager.js')
-const HashChecker = require('./hash_cheker.js')
+const HashChecker = require('./hash_checker.js')
 const NebUtil = require('./neb_util.js')
 const Utils = require('./utils.js')
 

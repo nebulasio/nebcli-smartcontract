@@ -49,30 +49,52 @@ class NebUtil {
                 .then(resp => {
                     info.balance = resp.balance
                     info.nonce = parseInt(resp.nonce) + 1
-                    return self.neb.api.gasPrice()
-                })
-                .then(resp => {
-                    info.gasPrice = NebUtils.toBigNumber(resp.gas_price).mul(NebUtils.toBigNumber("1.5")).toString(10)
+                    info.gasPrice = '20000000000'
                     resolve(info)
+                    // return self.neb.api.gasPrice()
                 })
+                // .then(resp => {
+                //     info.gasPrice = NebUtils.toBigNumber(resp.gas_price).toString(10)
+                //     resolve(info)
+                // })
                 .catch(e => {
-                    console.trace(e)
-                    resolve(null)
+                    throw e
                 })
         })
+    }
+
+    async genTransferData(from, to, value) {
+        let accountInfo = await this.getAccountInfo(from)
+        // if (!accountInfo) {
+        //     return null
+        // }
+        let gasLimit = "10000000" //await this._estimateTransferGas(from, to, value)
+        // if (!gasLimit) {
+        //     return null
+        // }
+        return {
+            chainId: this.chainId,
+            from: from,
+            to: to,
+            value: value,
+            nonce: accountInfo.nonce,
+            gasPrice: accountInfo.gasPrice,
+            gasLimit: gasLimit,
+        }
     }
 
     async genDeploySignData(from, source, args) {
         let accountInfo = await this.getAccountInfo(from).catch(e => {
             this._logger.e(e)
         })
-        if (!accountInfo) {
-            return null
-        }
-        let gasLimit = await this._estimateDeployGas(from, source, args)
-        if (!gasLimit) {
-            return null
-        }
+        // if (!accountInfo) {
+        //     return null
+        // }
+        let gasLimit = '10000000'
+        // let gasLimit = await this._estimateDeployGas(from, source, args)
+        // if (!gasLimit) {
+        //     return null
+        // }
         return {
             chainId: this.chainId,
             from: from,
@@ -90,16 +112,15 @@ class NebUtil {
     }
 
     async genCallSignData(from, contractAddress, value, func, args) {
-        let accountInfo = await this.getAccountInfo(from).catch(e => {
-            this._logger.e(e)
-        })
-        if (!accountInfo) {
-            return null
-        }
-        let gasLimit = await this._estimateCallGas(from, contractAddress, value, func, args)
-        if (!gasLimit) {
-            return null
-        }
+        let accountInfo = await this.getAccountInfo(from)
+        // if (!accountInfo) {
+        //     return null
+        // }
+        let gasLimit = '10000000'
+        // let gasLimit = await this._estimateCallGas(from, contractAddress, value, func, args)
+        // if (!gasLimit) {
+        //     return null
+        // }
         return {
             chainId: this.chainId,
             from: from,
@@ -147,9 +168,21 @@ class NebUtil {
                 resolve(r)
             }).catch(e => {
                 self._logger.e(e)
-                resolve(null)
+                throw e
             })
         })
+    }
+
+    async oneKeyTransfer(account, toAddress, value) {
+        let data = await this.genTransferData(account.getAddressString(), toAddress, value)
+        if (data == null) {
+            return null
+        }
+        let signData = await this.sign(account, data)
+        if (!signData) {
+            return null
+        }
+        return await this.sendRowTransaction(signData)
     }
 
     async oneKeyDeploy(account, source, args) {
@@ -188,6 +221,25 @@ class NebUtil {
         })
     }
 
+    async _estimateTransferGas(from, to, value) {
+        let self = this
+        return new Promise((resolve) => {
+            this.neb.api.estimateGas({
+                from: from,
+                to: to,
+                value: value,
+                nonce: 0,
+                gasPrice: "20000000000",
+                gasLimit: "10000000",
+            }).then(r => {
+                resolve(new BigNumber(r.gas).plus(10000).toString(10))
+            }).catch(e => {
+                self._logger.e(e)
+                resolve(null)
+            })
+        })
+    }
+
     async _estimateDeployGas(from, source, args) {
         let r = await this.deployTest(from, source, args)
         if (r.estimate_gas) {
@@ -215,7 +267,7 @@ class NebUtil {
                 value: value,
                 nonce: 0,
                 gasPrice: "20000000000",
-                gasLimit: "400000",
+                gasLimit: "10000000",
                 contract: contract
             }).then(r => {
                 resolve(r)
@@ -230,5 +282,6 @@ class NebUtil {
 
 NebUtil.testnet = new NebUtil(false)
 NebUtil.mainnet = new NebUtil(true)
+
 
 module.exports = NebUtil

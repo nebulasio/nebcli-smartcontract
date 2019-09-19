@@ -1,7 +1,7 @@
 const NebAccount = require('nebulas').Account
 const TestKeys = require('./test_keys.js')
 const ConfigManager = require('./config_manager.js')
-const HashChecker = require('./hash_cheker.js')
+const HashChecker = require('./hash_checker.js')
 const Logger = require('./logger.js')
 
 
@@ -69,6 +69,7 @@ class OnlineBase {
     _reset() {
         this.__account = null
         this.__value = 0
+        this.__contractAddress = null
     }
 
     async _getDeployResult(contractName, r) {
@@ -83,8 +84,8 @@ class OnlineBase {
         let success = await checker.check()
         r = checker.result
         if (!success) {
-            this._logger.d(contractName + '.deploy', 'execute error:', r.execute_err)
-            throw r.execute_err
+            this._logger.d(contractName + '.deploy', 'execute error:', r.execute_error)
+            throw r.execute_error
         } else {
             ConfigManager.setOnlineContractAddress(contractName, address, this.isMainnet)
             this._logger.d(contractName + '.deploy', 'execute success', 'contract address:', address, 'result:', r.execute_result)
@@ -97,7 +98,11 @@ class OnlineBase {
             throw 'netwok error.'
         }
         if (r.result) {
-            return JSON.parse(r.result)
+            try {
+                return JSON.parse(r.result)
+            } catch (_) {
+                throw r.result
+            }
         }
         if (r.execute_err !== '') {
             throw r.execute_err
@@ -115,11 +120,11 @@ class OnlineBase {
         let success = await checker.check()
         r = checker.result
         if (!success) {
-            this._logger.d(info, 'execute error:', r.execute_err)
-            throw r.execute_err
+            this._logger.d(info, 'execute error:', r.execute_error)
+            throw r.execute_error
         } else {
             this._logger.d(info, 'execute success result:', r.execute_result)
-            return r.execute_result
+            return JSON.parse(r.execute_result)
         }
     }
 }
