@@ -8,18 +8,22 @@ const Event = neblocal.Event
 /** Local simulation environment code; End. */
 
 
-function @contract() {
-    // You need to ensure that each contract has a different __contractName
-    this.__contractName = "@contract"
-}
+class @contract {
+    constructor() {
+        // You need to ensure that each contract has a different __contractName
+        this.__contractName = "@contract"
+    }
 
-@contract.prototype = {
+    init () {
+    }
 
-    init: function () {
-    },
-
-    accept: function() {
-    },
+    accept() {
+        Event.Trigger('transfer', {
+            from: Blockchain.transaction.from,
+            to: Blockchain.transaction.to,
+            value: Blockchain.transaction.value,
+        })
+    }
 
 }
 

@@ -21,7 +21,7 @@ class Build {
         let sp = path.join(this.projectInfo.workspace, 'src', contract.name, 'main.js')
         let dp = path.join(this.projectInfo.workspace, 'build', 'output', contract.name + '.js')
 
-        let r = ''
+        let r = 'const crypto = require(\'crypto.js\')\n'
         let lines = String(fs.readFileSync(sp)).split('\n')
         let b = false
         lines.forEach(line => {
