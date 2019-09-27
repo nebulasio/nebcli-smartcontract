@@ -41,19 +41,22 @@ const Event = neblocal.Event
 /** Local simulation environment code; End. */
 
 
-function MyContract() {
-    // You need to ensure that each contract has a different __contractName
-    this.__contractName = "MyContract"
-}
+class MyContract {
+    constructor() {
+        // You need to ensure that each contract has a different __contractName
+        this.__contractName = "MyContract"
+    }
 
-MyContract.prototype = {
+    init () {
+    }
 
-    init: function () {
-    },
-
-    accept: function() {
-    },
-
+    accept() {
+        Event.Trigger('transfer', {
+            from: Blockchain.transaction.from,
+            to: Blockchain.transaction.to,
+            value: Blockchain.transaction.value,
+        })
+    }
 }
 
 module.exports = MyContract
@@ -71,20 +74,24 @@ const Event = neblocal.Event
 /** Local simulation environment code; End. */
 
 
-function MyContract() {
-    // You need to ensure that each contract has a different __contractName
-    this.__contractName = "MyContract"
+class MyContract {
+    constructor() {
+        // You need to ensure that each contract has a different __contractName
+        this.__contractName = "MyContract"
 
-    // 定义一个存储
-    LocalContractStorage.defineProperty(this, 'data', null)
-}
+        // 定义一个存储
+        LocalContractStorage.defineProperty(this, 'data', null)
+    }
 
-MyContract.prototype = {
+    init () {
+    }
 
-    init: function () {
-    },
-
-    accept: function() {
+    accept() {
+        Event.Trigger('transfer', {
+            from: Blockchain.transaction.from,
+            to: Blockchain.transaction.to,
+            value: Blockchain.transaction.value,
+        })
     },
 
     // 保存数据
@@ -116,6 +123,8 @@ nebdev generate
 - test/local_main.js 本地模拟环境测试主文件
 - test/online_main.js 线上环境测试主文件
 
+如果使用VSCode, 可以安装插件, 保存合约代码时会自动调用 nebdev generate;  
+VSCode 插件名为 'nebulas'
 
 ## 4. 本地模拟环境测试及调试
 
