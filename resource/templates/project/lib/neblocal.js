@@ -321,6 +321,9 @@ const Blockchain = {
 
     get block() {
         return {
+            get timestamp() {
+                return LocalContext.blockHeight * 15
+            },
             get height() {
                 return LocalContext.blockHeight
             }
