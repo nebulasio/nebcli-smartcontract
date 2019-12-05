@@ -30,8 +30,9 @@ class ContractInfo {
 
         this.name = contract.__contractName
         this.methods = []
-        let p = Reflect.getPrototypeOf(contract)
-        Object.getOwnPropertyNames(p).forEach(key => {
+        let keys = []
+        this._getObjKeys(contract, keys)
+        keys.forEach(key => {
             let f = null
             try {
                 f = contract[key]
@@ -42,6 +43,20 @@ class ContractInfo {
             }
         })
         this.config = { release: this._releaseConfig(), debug: this._debugConfig() }
+    }
+
+    _getObjKeys(o, keys) {
+        let p = Reflect.getPrototypeOf(o)
+        let ks = Object.getOwnPropertyNames(p)
+        if (ks.indexOf('__defineGetter__') >= 0) {
+            return
+        }
+        ks.forEach(k => {
+            if (keys.indexOf(k) < 0) {
+                keys.push(k)
+            }
+        })
+        this._getObjKeys(p, keys)
     }
 
     _releaseConfig() {
