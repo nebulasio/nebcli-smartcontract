@@ -26,7 +26,9 @@ class Build {
         let b = false
         lines.forEach(line => {
             if (b) {
-                r += line + '\n'
+                if (!line.trim().startsWith('//')) {
+                    r += line + '\n'
+                }
             } else {
                 if (line.startsWith('/** Local simulation environment code; End. */')) {
                     b = true
