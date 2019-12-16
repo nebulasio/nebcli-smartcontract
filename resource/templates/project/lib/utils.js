@@ -27,7 +27,7 @@ class Utils {
         if (!value) {
             return null
         }
-        if (value.startsWith('/')) {
+        if (value.startsWith('/') || /^[a-zA-Z]\:/.test(value)) {
             return value
         }
         return path.join(cfgFolderPath, value)

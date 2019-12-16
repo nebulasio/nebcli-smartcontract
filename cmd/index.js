@@ -6,7 +6,7 @@ const nebdev = require('../index')
 
 
 function getPath(v) {
-    if (v.startsWith('/')) {
+    if (v.startsWith('/') || /^[a-zA-Z]\:/.test(v)) {
         return v
     }
     return path.join(process.cwd(), v)
