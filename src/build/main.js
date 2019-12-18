@@ -26,7 +26,7 @@ class Build {
         let b = false
         lines.forEach(line => {
             if (b) {
-                if (!line.trim().startsWith('//')) {
+                if (!/^(\/\/|\/\*|\*)/.test(line.trim())) {
                     r += line + '\n'
                 }
             } else {
